@@ -1,5 +1,5 @@
 (ns potterycoord.governor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [potterycoord.store :as store]
             [potterycoord.advisor :as advisor]
             [potterycoord.governor :as governor]))
