@@ -1,5 +1,5 @@
 (ns potterycoord.actor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [potterycoord.actor :as actor]
             [potterycoord.store :as store]))
 
