@@ -1,0 +1,44 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a pottery workshop scheduling/logistics
+;; coordination robot handles crew scheduling, clay-batch/glaze/kiln-load
+;; records and clay/glaze supply orders for a potters' crew (ISCO 7314). Its
+;; physical work: hauling boxes of clay from the store to the wedging bench,
+;; loading kiln shelves with ware, and the kiln soak (how long until the
+;; middle of a pot wall is at temperature).
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-7314"
+ :cases
+ [{:id :clay-boxes-to-wedging-bench
+   :kind :transport
+   :procedure "cart hauls boxes of plastic clay from the clay store to the wedging bench"
+   :params {:mass-kg 60.0 :distance-m 20.0 :v-max-mps 1.0 :a-max-mps2 0.5
+            :brake-decel-mps2 0.8 :drive-force-n 150.0 :crr 0.02
+            :cog-height-m 0.40 :support-half-length-m 0.30 :max-time-s 1200.0}
+   :sweep {:param :payload-kg :values [25.0 50.0 100.0 150.0 250.0]}
+   :quantity :cycle-time-s
+   :limit {:max 35.0 :basis "estimate: one store-to-bench leg while the wedging crew is between batches"}
+   :boundary {:lo 10.0 :hi 1000.0}}
+  {:id :ware-onto-kiln-shelf
+   :kind :manipulator
+   :procedure "arm lifts a board of greenware from the drying rack onto a kiln shelf"
+   :params {:l1-m 0.50 :l2-m 0.45 :m1-kg 5.0 :m2-kg 4.0
+            :from [0.60 0.40] :to [0.75 0.10] :duration-s 3.0 :steps 500}
+   :sweep {:param :payload-kg :values [1.0 3.0 5.0 8.0 12.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a light collaborative arm (~5 kg class)"}
+   :boundary {:lo 0.1 :hi 30.0}}
+  {:id :bisque-soak-wall-centre
+   :kind :thermal
+   :procedure "pot wall at 600 C after the ramp soaks in a 950 C bisque kiln until the middle of the wall (insulated symmetry plane) reaches 930 C"
+   :params {:thickness-m 0.005 :conductivity-w-mk 1.0 :density-kg-m3 1800.0 :specific-heat-j-kgk 900.0
+            :t0-c 600.0 :t-hot-c 950.0 :h-front-w-m2k 60.0 :h-back-w-m2k 0.0 :t-back-ambient-c 950.0
+            :threshold-c 930.0 :duration-s 7200.0 :nodes 11}
+   :sweep {:param :thickness-m :values [0.003 0.005 0.008 0.012 0.02]}
+   :quantity :time-to-threshold-s
+   :limit {:max 1800.0 :basis "estimate: a 30-minute top-temperature hold as in common bisque schedules; h = 60 W/m2K lumps kiln radiation and is itself an estimate"}
+   :boundary {:lo 0.002 :hi 0.04}}]}
