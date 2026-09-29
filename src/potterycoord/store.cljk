@@ -1,7 +1,7 @@
 (ns potterycoord.store
   "SSoT for the ISCO-08 7314 potters and related workers pottery
   workshop scheduling/logistics coordination actor (itonami actor
-  pattern, ADR-2607121000 / CLAUDE.md Actors section; README's
+  pattern, ADR-2607121000 / AGENTS.md Actors section; README's
   'Robotics premise' — a pottery workshop scheduling/logistics
   coordination robot performs crew scheduling,
   clay-batch/glaze-materials-usage/kiln-load progress-record logging
