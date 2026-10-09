@@ -41,4 +41,15 @@
    :sweep {:param :thickness-m :values [0.003 0.005 0.008 0.012 0.02]}
    :quantity :time-to-threshold-s
    :limit {:max 1800.0 :basis "estimate: a 30-minute top-temperature hold as in common bisque schedules; h = 60 W/m2K lumps kiln radiation and is itself an estimate"}
-   :boundary {:lo 0.002 :hi 0.04}}]}
+   :boundary {:lo 0.002 :hi 0.04}}
+  {:id :kiln-cooling-before-unload
+   :kind :thermal
+   :procedure "after the bisque firing the kiln is switched off and the loaded kiln cools in the open workshop; the robot schedules the unloading time, so the wall must first fall below the unloading temperature"
+   :params {:thickness-m 0.005 :conductivity-w-mk 1.0 :density-kg-m3 1800.0 :specific-heat-j-kgk 900.0
+            :t0-c 950.0 :t-hot-c 950.0 :h-front-w-m2k 10.0 :h-back-w-m2k 5.0 :t-back-ambient-c 20.0
+            :heating-s 3600.0 :t-cool-c 20.0
+            :threshold-c 150.0 :threshold-direction :falling :duration-s 28800.0 :nodes 11}
+   :sweep {:param :thickness-m :values [0.005 0.01 0.015 0.02 0.03]}
+   :quantity :time-to-threshold-s
+   :limit {:max 10800.0 :basis "estimate: unloading within 3 hours of switch-off, as a 24-hour potter's workshop runs kilns on a roughly one-day cycle; open-kiln h = 10/5 W/m2K lumps natural convection and is itself an estimate"}
+   :boundary {:lo 0.002 :hi 0.05}}]}
